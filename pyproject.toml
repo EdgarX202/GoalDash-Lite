@@ -1,20 +1,18 @@
 [project]
-name = "web-app-prt"
+name = "goaldash-lite"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [
-    { name = "EdgarX202", email = "79812399+EdgarX202@users.noreply.github.com" }
-]
+
 requires-python = ">=3.14"
 dependencies = [
     "fastapi>=0.141.1",
     "uvicorn>=0.53.0",
 ]
 
-[project.scripts]
-web-app-prt = "web_app_prt:main"
-
 [build-system]
 requires = ["uv_build>=0.12.11,<0.13.0"]
 build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "GoalDash_Lite"

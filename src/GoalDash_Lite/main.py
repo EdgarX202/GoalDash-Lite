@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from web_app_prt.routers import goals
+from GoalDash_Lite.routers import goals
 
 app = FastAPI()
 

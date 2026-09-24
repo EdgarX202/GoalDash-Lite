@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from web_app_prt.schemas import Goal, GoalCreate
+from GoalDash_Lite.schemas import Goal, GoalCreate
 
 router = APIRouter(prefix="/goals", tags=["Goals"])
 
