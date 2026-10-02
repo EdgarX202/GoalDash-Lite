@@ -1,6 +1,6 @@
 # GoalDash Lite 🎯
 GoalDash Lite is an early-stage prototype of a gamified financial goals web application.<br>
-The project explores how goal tracking, progression and rewards can be used to encourage users to build positive financial habits. This prototype represents the foundation for a larger mobile application planned for future development.
+The project explores how goal tracking, progression and rewards can be used to encourage users to build positive financial habits.
 
 ---
 
