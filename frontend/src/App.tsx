@@ -7,6 +7,8 @@ type Goal = {
   category: string;
   target_pence: number;
   contributed_pence: number;
+  deadline: string | null;
+  priority: "High" | "Moderate" | "Low";
 };
 
 const currency = new Intl.NumberFormat("en-GB", {
@@ -32,6 +34,8 @@ function NewGoalForm({ onCreated }: NewGoalFormProps) {
     const name = String(formData.get("name") ?? "").trim();
     const category = String(formData.get("category") ?? "");
     const target = String(formData.get("target") ?? "");
+    const deadline = String(formData.get("deadline") ?? "");
+    const priority = String(formData.get("priority") ?? "Moderate");
 
     // Accept pounds with up to two decimal places.
     if (!/^\d+(\.\d{1,2})?$/.test(target)) {
@@ -62,6 +66,8 @@ function NewGoalForm({ onCreated }: NewGoalFormProps) {
           name,
           category,
           target_pence: targetPence,
+          deadline: deadline || null,
+          priority,
         }),
       });
 
@@ -133,6 +139,24 @@ function NewGoalForm({ onCreated }: NewGoalFormProps) {
           placeholder="1000.00"
           required
         />
+
+        <label htmlFor="goal-deadline">Deadline (optional)</label>
+        <input
+          id="goal-deadline"
+          name="deadline"
+          type="date"
+        />
+
+        <label htmlFor="goal-priority">Priority</label>
+        <select
+          id="goal-priority"
+          name="priority"
+          defaultValue="Moderate"
+        >
+          <option value="High">High</option>
+          <option value="Moderate">Moderate</option>
+          <option value="Low">Low</option>
+        </select>
 
         <div className="form-actions">
           <button type="submit">
@@ -221,6 +245,18 @@ function App() {
         <article className="goal-card" key={goal.id}>
           <span className="category">{goal.category}</span>
           <h2>{goal.name}</h2>
+          <p>Priority: {goal.priority}</p>
+
+          <p>
+            Deadline:{" "}
+            {goal.deadline
+              ? new Intl.DateTimeFormat("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                }).format(new Date(`${goal.deadline}T00:00:00`))
+              : "No deadline"}
+          </p>
 
           <p>
             {currency.format(goal.contributed_pence / 100)} contributed of{" "}
