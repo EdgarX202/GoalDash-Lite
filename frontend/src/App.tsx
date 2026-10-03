@@ -1,4 +1,4 @@
-import { useEffect, useState, type SubmitEvent } from "react";
+import { useEffect, useRef, useState, type SubmitEvent } from "react";
 import "./App.css";
 
 type Goal = {
@@ -19,6 +19,7 @@ type NewGoalFormProps = {
 };
 
 function NewGoalForm({ onCreated }: NewGoalFormProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -47,7 +48,7 @@ function NewGoalForm({ onCreated }: NewGoalFormProps) {
       setError("Enter a name and a valid target greater than £0.");
       return;
     }
-
+    
     setSaving(true);
     setError("");
 
@@ -71,6 +72,7 @@ function NewGoalForm({ onCreated }: NewGoalFormProps) {
       const createdGoal: Goal = await response.json();
       onCreated(createdGoal);
       form.reset();
+      dialogRef.current?.close();
     } catch (error) {
       setError(
         error instanceof Error ? error.message : "Could not create the goal.",
@@ -81,9 +83,30 @@ function NewGoalForm({ onCreated }: NewGoalFormProps) {
   }
 
   return (
-    <form className="goal-card goal-form" onSubmit={handleSubmit}>
-      <h2>New goal</h2>
+    <>
+      <button
+        className="new-goal-button"
+        type="button"
+        onClick={() => dialogRef.current?.showModal()}
+      >
+        + New goal
+      </button>
 
+      <dialog
+        ref={dialogRef}
+        className="goal-dialog"
+        aria-labelledby="new-goal-title"
+        onCancel={(event) => {
+          if (saving) event.preventDefault();
+        }}
+        onClose={() => {
+          dialogRef.current?.querySelector("form")?.reset();
+          setError("");
+        }}
+      >
+        <form className="goal-form" onSubmit={handleSubmit}>
+          <h2 id="new-goal-title">New goal</h2>
+        
       <fieldset disabled={saving}>
         <label htmlFor="goal-name">Goal name</label>
         <input
@@ -111,14 +134,26 @@ function NewGoalForm({ onCreated }: NewGoalFormProps) {
           required
         />
 
-        <button type="submit">
-          {saving ? "Creating…" : "Create goal"}
-        </button>
+        <div className="form-actions">
+          <button type="submit">
+            {saving ? "Creating…" : "Create goal"}
+          </button>
+
+          <button
+            type="button"
+            className="cancel-button"
+            onClick={() => dialogRef.current?.close()}
+          >
+            Cancel
+          </button>
+        </div>
       </fieldset>
 
-      {error && <p role="alert">{error}</p>}
-    </form>
-  );
+        {error && <p role="alert">{error}</p>}
+      </form>
+    </dialog>
+  </>
+);
 }
 
 function App() {
