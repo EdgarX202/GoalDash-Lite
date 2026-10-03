@@ -18,11 +18,13 @@ def create_goal(goal_data: GoalCreate):
     global next_goal_id
 
     goal = Goal(
-        id=next_goal_id,
-        name=goal_data.name,
-        category=goal_data.category,
-        target_pence=goal_data.target_pence,
-    )
+    id=next_goal_id,
+    name=goal_data.name,
+    category=goal_data.category,
+    target_pence=goal_data.target_pence,
+    deadline=goal_data.deadline,
+    priority=goal_data.priority,
+)
 
     goals.append(goal)
     next_goal_id += 1
