@@ -116,3 +116,18 @@ progress {
   background: white;
   color: #36543c;
 }
+
+.delete-button {
+  padding: 10px 14px;
+  border: 1px solid #b64a4a;
+  border-radius: 10px;
+  background: white;
+  color: #922d2d;
+  font: inherit;
+  cursor: pointer;
+}
+
+.delete-button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}

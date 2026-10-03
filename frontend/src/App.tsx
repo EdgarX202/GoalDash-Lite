@@ -184,6 +184,8 @@ function App() {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [deleteError, setDeleteError] = useState("");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -218,6 +220,36 @@ function App() {
     return () => controller.abort();
   }, []);
 
+  async function deleteGoal(goal: Goal) {
+    const confirmed = window.confirm(`Delete "${goal.name}"?`);
+
+    if (!confirmed) return;
+
+    setDeletingId(goal.id);
+    setDeleteError("");
+
+    try {
+      const response = await fetch(
+        `http://localhost:8000/goals/${goal.id}`,
+        { method: "DELETE" },
+      );
+
+      if (!response.ok) {
+        throw new Error(`Could not delete the goal (${response.status}).`);
+      }
+
+      setGoals((currentGoals) =>
+        currentGoals.filter((item) => item.id !== goal.id),
+      );
+    } catch (error) {
+      setDeleteError(
+        error instanceof Error ? error.message : "Could not delete the goal.",
+      );
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
   return (
     <main className="goals-page">
       <header>
@@ -240,6 +272,8 @@ function App() {
       {!loading && !error && goals.length === 0 && (
         <p>No goals yet. Your first goal will appear here.</p>
       )}
+
+      {deleteError && <p role="alert">{deleteError}</p>}
 
       {goals.map((goal) => (
         <article className="goal-card" key={goal.id}>
@@ -276,6 +310,16 @@ function App() {
             ).toFixed(0)}
             % complete
           </p>
+
+          <button
+            className="delete-button"
+            type="button"
+            disabled={deletingId !== null}
+            onClick={() => deleteGoal(goal)}
+          >
+            {deletingId === goal.id ? "Deleting…" : "Delete goal"}
+          </button>
+          
         </article>
       ))}
     </main>

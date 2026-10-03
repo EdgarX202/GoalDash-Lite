@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response
 
 from GoalDash_Lite.schemas import Goal, GoalCreate
 
@@ -36,5 +36,14 @@ def get_goal(goal_id: int):
     for goal in goals:
         if goal.id == goal_id:
             return goal
+
+    raise HTTPException(status_code=404, detail="Goal not found")
+
+@router.delete("/{goal_id}", status_code=204)
+def delete_goal(goal_id: int):
+    for index, goal in enumerate(goals):
+        if goal.id == goal_id:
+            goals.pop(index)
+            return Response(status_code=204)
 
     raise HTTPException(status_code=404, detail="Goal not found")
