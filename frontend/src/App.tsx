@@ -1,15 +1,7 @@
 import { useEffect, useRef, useState, type SubmitEvent } from "react";
 import "./App.css";
-
-type Goal = {
-  id: number;
-  name: string;
-  category: string;
-  target_pence: number;
-  contributed_pence: number;
-  deadline: string | null;
-  priority: "High" | "Moderate" | "Low";
-};
+import type { Goal } from "./types";
+import ContributionForm from "./ContributionForm";
 
 const currency = new Intl.NumberFormat("en-GB", {
   style: "currency",
@@ -329,6 +321,17 @@ function App() {
             ).toFixed(0)}
             % complete
           </p>
+
+          <ContributionForm
+            goal={goal}
+            onSaved={(updatedGoal) => {
+              setGoals((currentGoals) =>
+                currentGoals.map((item) =>
+                  item.id === updatedGoal.id ? updatedGoal : item,
+                ),
+              );
+            }}
+          />
 
           <GoalForm
             goal={goal}
