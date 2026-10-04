@@ -47,3 +47,22 @@ def delete_goal(goal_id: int):
             return Response(status_code=204)
 
     raise HTTPException(status_code=404, detail="Goal not found")
+
+@router.put("/{goal_id}", response_model=Goal)
+def update_goal(goal_id: int, goal_data: GoalCreate):
+    for index, goal in enumerate(goals):
+        if goal.id == goal_id:
+            updated_goal = Goal(
+                id=goal.id,
+                name=goal_data.name,
+                category=goal_data.category,
+                target_pence=goal_data.target_pence,
+                deadline=goal_data.deadline,
+                priority=goal_data.priority,
+                contributed_pence=goal.contributed_pence,
+            )
+
+            goals[index] = updated_goal
+            return updated_goal
+
+    raise HTTPException(status_code=404, detail="Goal not found")

@@ -16,14 +16,17 @@ const currency = new Intl.NumberFormat("en-GB", {
   currency: "GBP",
 });
 
-type NewGoalFormProps = {
-  onCreated: (goal: Goal) => void;
+type GoalFormProps = {
+  goal?: Goal;
+  onSaved: (goal: Goal) => void;
 };
 
-function NewGoalForm({ onCreated }: NewGoalFormProps) {
+function GoalForm({ goal, onSaved }: GoalFormProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const isEditing = goal !== undefined;
+  const formId = goal ? `edit-goal-${goal.id}` : "new-goal";
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -57,8 +60,12 @@ function NewGoalForm({ onCreated }: NewGoalFormProps) {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8000/goals", {
-        method: "POST",
+        const url = goal
+          ? `http://localhost:8000/goals/${goal.id}`
+          : "http://localhost:8000/goals";
+
+        const response = await fetch(url, {
+          method: isEditing ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -72,16 +79,16 @@ function NewGoalForm({ onCreated }: NewGoalFormProps) {
       });
 
       if (!response.ok) {
-        throw new Error(`Could not create the goal (${response.status}).`);
+        throw new Error(`Could not save the goal (${response.status}).`);
       }
 
-      const createdGoal: Goal = await response.json();
-      onCreated(createdGoal);
+      const savedGoal: Goal = await response.json();
+      onSaved(savedGoal);
       form.reset();
       dialogRef.current?.close();
     } catch (error) {
       setError(
-        error instanceof Error ? error.message : "Could not create the goal.",
+        error instanceof Error ? error.message : "Could not save the goal.",
       );
     } finally {
       setSaving(false);
@@ -93,15 +100,18 @@ function NewGoalForm({ onCreated }: NewGoalFormProps) {
       <button
         className="new-goal-button"
         type="button"
-        onClick={() => dialogRef.current?.showModal()}
+        onClick={() => {
+          dialogRef.current?.querySelector("form")?.reset();
+          dialogRef.current?.showModal();
+        }}
       >
-        + New goal
+        {isEditing ? "Edit goal" : "+ New goal"}
       </button>
 
       <dialog
         ref={dialogRef}
         className="goal-dialog"
-        aria-labelledby="new-goal-title"
+        aria-labelledby={`${formId}-title`}
         onCancel={(event) => {
           if (saving) event.preventDefault();
         }}
@@ -111,47 +121,56 @@ function NewGoalForm({ onCreated }: NewGoalFormProps) {
         }}
       >
         <form className="goal-form" onSubmit={handleSubmit}>
-          <h2 id="new-goal-title">New goal</h2>
+          <h2 id={`${formId}-title`}>
+            {isEditing ? "Edit goal" : "New goal"}
+          </h2>
         
       <fieldset disabled={saving}>
-        <label htmlFor="goal-name">Goal name</label>
+        <label htmlFor={`${formId}-name`}>Goal name</label>
         <input
-          id="goal-name"
+          id={`${formId}-name`}
           name="name"
           placeholder="Emergency fund"
+          defaultValue={goal?.name ?? ""}
           maxLength={100}
           required
         />
 
-        <label htmlFor="goal-category">Category</label>
-        <select id="goal-category" name="category" defaultValue="Savings">
+        <label htmlFor={`${formId}-category`}>Category</label>
+        <select
+          id={`${formId}-category`}
+          name="category"
+          defaultValue={goal?.category ?? "Savings"}
+        >
           <option value="Savings">Savings</option>
           <option value="Debt">Debt</option>
           <option value="Other">Other</option>
         </select>
 
-        <label htmlFor="goal-target">Target amount (£)</label>
+        <label htmlFor={`${formId}-target`}>Target amount (£)</label>
         <input
-          id="goal-target"
+          id={`${formId}-target`}
           name="target"
           type="text"
           inputMode="decimal"
           placeholder="1000.00"
+          defaultValue={goal ? (goal.target_pence / 100).toFixed(2) : ""}
           required
         />
 
-        <label htmlFor="goal-deadline">Deadline (optional)</label>
+        <label htmlFor={`${formId}-deadline`}>Deadline (optional)</label>
         <input
-          id="goal-deadline"
+          id={`${formId}-deadline`}
           name="deadline"
           type="date"
+          defaultValue={goal?.deadline ?? ""}
         />
 
-        <label htmlFor="goal-priority">Priority</label>
+        <label htmlFor={`${formId}-priority`}>Priority</label>
         <select
-          id="goal-priority"
+          id={`${formId}-priority`}
           name="priority"
-          defaultValue="Moderate"
+          defaultValue={goal?.priority ?? "Moderate"}
         >
           <option value="High">High</option>
           <option value="Moderate">Moderate</option>
@@ -160,7 +179,7 @@ function NewGoalForm({ onCreated }: NewGoalFormProps) {
 
         <div className="form-actions">
           <button type="submit">
-            {saving ? "Creating…" : "Create goal"}
+            {saving ? "Saving…" : isEditing ? "Save changes" : "Create goal"}
           </button>
 
           <button
@@ -259,8 +278,8 @@ function App() {
       </header>
 
       {!loading && !error && (
-        <NewGoalForm
-          onCreated={(newGoal) => {
+        <GoalForm
+          onSaved={(newGoal) => {
             setGoals((currentGoals) => [...currentGoals, newGoal]);
           }}
         />
@@ -310,6 +329,17 @@ function App() {
             ).toFixed(0)}
             % complete
           </p>
+
+          <GoalForm
+            goal={goal}
+            onSaved={(updatedGoal) => {
+              setGoals((currentGoals) =>
+                currentGoals.map((item) =>
+                  item.id === updatedGoal.id ? updatedGoal : item,
+                ),
+              );
+            }}
+          />
 
           <button
             className="delete-button"
