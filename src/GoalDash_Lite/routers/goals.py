@@ -1,11 +1,12 @@
 from fastapi import APIRouter, HTTPException, Response
 
-from GoalDash_Lite.schemas import Goal, GoalCreate
+from GoalDash_Lite.schemas import Contribution, ContributionCreate, Goal, GoalCreate
 
 router = APIRouter(prefix="/goals", tags=["Goals"])
 
 goals: list[Goal] = []
 next_goal_id = 1
+next_contribution_id = 1
 
 
 @router.get("", response_model=list[Goal])
@@ -53,6 +54,7 @@ def update_goal(goal_id: int, goal_data: GoalCreate):
     for index, goal in enumerate(goals):
         if goal.id == goal_id:
             updated_goal = Goal(
+                contributions=goal.contributions,
                 id=goal.id,
                 name=goal_data.name,
                 category=goal_data.category,
@@ -66,3 +68,23 @@ def update_goal(goal_id: int, goal_data: GoalCreate):
             return updated_goal
 
     raise HTTPException(status_code=404, detail="Goal not found")
+
+@router.post("/{goal_id}/contributions", response_model=Goal, status_code=201)
+def add_contribution(goal_id: int, contribution_data: ContributionCreate):
+    global next_contribution_id
+
+    goal = get_goal(goal_id)
+
+    contribution = Contribution(
+        id=next_contribution_id,
+        amount_pence=contribution_data.amount_pence,
+        contributed_on=contribution_data.contributed_on,
+    )
+
+    goal.contributions.append(contribution)
+    goal.contributed_pence = sum(
+        entry.amount_pence for entry in goal.contributions
+    )
+    next_contribution_id += 1
+
+    return goal

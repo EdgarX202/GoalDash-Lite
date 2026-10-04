@@ -12,6 +12,14 @@ class GoalCreate(BaseModel):
     priority: Literal["High", "Moderate", "Low"] = "Moderate"
 
 
+class ContributionCreate(BaseModel):
+    amount_pence: int = Field(gt=0)
+    contributed_on: date
+
+class Contribution(ContributionCreate):
+    id: int
+
 class Goal(GoalCreate):
     id: int
     contributed_pence: int = Field(default=0, ge=0)
+    contributions: list[Contribution] = Field(default_factory=list)
