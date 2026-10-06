@@ -198,8 +198,8 @@ function App() {
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [deleteError, setDeleteError] = useState("");
   const [goalFilter, setGoalFilter] = useState<"active" | "completed">(
-  "active",
-);
+  "active",);
+  const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -272,8 +272,33 @@ function App() {
     (goal) => goal.contributed_pence >= goal.target_pence,
   );
 
-  const visibleGoals =
-    goalFilter === "active" ? activeGoals : completedGoals;
+  const filteredGoals =
+  goalFilter === "active" ? activeGoals : completedGoals;
+
+  const priorityOrder = {
+    High: 0,
+    Moderate: 1,
+    Low: 2,
+  };
+
+  const visibleGoals = [...filteredGoals].sort((a, b) => {
+    switch (sortBy) {
+      case "oldest":
+        return a.id - b.id;
+
+      case "priority":
+        return priorityOrder[a.priority] - priorityOrder[b.priority];
+
+      case "target":
+        return b.target_pence - a.target_pence;
+
+      case "category":
+        return a.category.localeCompare(b.category);
+
+      default:
+        return b.id - a.id;
+    }
+  });
 
   return (
     <main className="goals-page">
@@ -320,6 +345,22 @@ function App() {
         >
           Completed ({completedGoals.length})
         </button>
+      </div>
+
+      <div className="goal-sort">
+        <label htmlFor="goal-sort">Sort by</label>
+
+        <select
+          id="goal-sort"
+          value={sortBy}
+          onChange={(event) => setSortBy(event.target.value)}
+        >
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="priority">Priority: high first</option>
+          <option value="target">Target: highest first</option>
+          <option value="category">Category: A–Z</option>
+        </select>
       </div>
 
       {deleteError && <p role="alert">{deleteError}</p>}

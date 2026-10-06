@@ -233,3 +233,21 @@ progress {
   border-color: #36543c;
   color: white;
 }
+
+.goal-sort {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.goal-sort select {
+  padding: 8px 12px;
+  border: 1px solid #b8c7b6;
+  border-radius: 8px;
+  background: white;
+  color: #243127;
+  font: inherit;
+}
