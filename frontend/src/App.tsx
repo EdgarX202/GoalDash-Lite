@@ -322,6 +322,40 @@ function App() {
             % complete
           </p>
 
+          <details className="contribution-history">
+            <summary>
+              Contribution history ({goal.contributions.length})
+            </summary>
+
+            {goal.contributions.length === 0 ? (
+              <p>No contributions recorded yet.</p>
+            ) : (
+              <ul>
+                {[...goal.contributions]
+                  .sort((a, b) =>
+                    b.contributed_on.localeCompare(a.contributed_on),
+                  )
+                  .map((contribution) => (
+                    <li key={contribution.id}>
+                      <time dateTime={contribution.contributed_on}>
+                        {new Intl.DateTimeFormat("en-GB", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        }).format(
+                          new Date(`${contribution.contributed_on}T00:00:00`),
+                        )}
+                      </time>
+
+                      <strong>
+                        {currency.format(contribution.amount_pence / 100)}
+                      </strong>
+                    </li>
+                  ))}
+              </ul>
+            )}
+          </details>
+
           <ContributionForm
             goal={goal}
             onSaved={(updatedGoal) => {

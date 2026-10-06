@@ -1,3 +1,9 @@
+export type Contribution = {
+  id: number;
+  amount_pence: number;
+  contributed_on: string;
+};
+
 export type Goal = {
   id: number;
   name: string;
@@ -6,4 +12,5 @@ export type Goal = {
   contributed_pence: number;
   deadline: string | null;
   priority: "High" | "Moderate" | "Low";
+  contributions: Contribution[];
 };

@@ -131,3 +131,83 @@ progress {
   opacity: 0.6;
   cursor: wait;
 }
+
+.contribution-history {
+  margin-top: 20px;
+  border-top: 1px solid #dce4da;
+  padding-top: 16px;
+}
+
+.contribution-history summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.contribution-history ul {
+  list-style: none;
+  padding: 0;
+}
+
+.contribution-history li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+}
+
+/* Compact goal cards */
+.goal-card {
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 14px;
+}
+
+.goal-card > h2 {
+  margin: 8px 0;
+  font-size: 1.15rem;
+  overflow-wrap: anywhere;
+}
+
+.goal-card > p {
+  margin: 6px 0;
+  font-size: 0.9rem;
+}
+
+.goal-card > .category {
+  padding: 3px 9px;
+  font-size: 0.75rem;
+}
+
+.goal-card > progress {
+  display: block;
+  height: 10px;
+  margin-top: 10px;
+}
+
+.goal-card > .progress-label {
+  font-size: 0.8rem;
+}
+
+/* Keep history collapsed until the user opens it */
+.goal-card > .contribution-history {
+  margin-top: 12px;
+  padding-top: 10px;
+  font-size: 0.85rem;
+}
+
+.contribution-history ul {
+  margin: 8px 0 0;
+}
+
+.contribution-history li {
+  padding: 6px 0;
+}
+
+/* Compact action buttons, with room to tap */
+.goal-card > button {
+  margin: 12px 6px 0 0;
+  padding: 8px 12px;
+  min-height: 44px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
