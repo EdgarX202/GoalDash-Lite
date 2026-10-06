@@ -197,6 +197,9 @@ function App() {
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [deleteError, setDeleteError] = useState("");
+  const [goalFilter, setGoalFilter] = useState<"active" | "completed">(
+  "active",
+);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -261,6 +264,17 @@ function App() {
     }
   }
 
+    const activeGoals = goals.filter(
+    (goal) => goal.contributed_pence < goal.target_pence,
+  );
+
+  const completedGoals = goals.filter(
+    (goal) => goal.contributed_pence >= goal.target_pence,
+  );
+
+  const visibleGoals =
+    goalFilter === "active" ? activeGoals : completedGoals;
+
   return (
     <main className="goals-page">
       <header>
@@ -280,13 +294,37 @@ function App() {
       {loading && <p role="status">Loading your goals…</p>}
       {error && <p role="alert">{error}</p>}
 
-      {!loading && !error && goals.length === 0 && (
-        <p>No goals yet. Your first goal will appear here.</p>
+      {!loading && !error && visibleGoals.length === 0 && (
+        <p role="status">
+          {goals.length === 0
+            ? "No goals yet. Create your first goal to get started."
+            : goalFilter === "active"
+              ? "No active goals. Your goals are all completed!"
+              : "No completed goals yet. Keep making progress."}
+        </p>
       )}
+
+      <div className="goal-filters" role="group" aria-label="Filter goals">
+        <button
+          type="button"
+          aria-pressed={goalFilter === "active"}
+          onClick={() => setGoalFilter("active")}
+        >
+          Active ({activeGoals.length})
+        </button>
+
+        <button
+          type="button"
+          aria-pressed={goalFilter === "completed"}
+          onClick={() => setGoalFilter("completed")}
+        >
+          Completed ({completedGoals.length})
+        </button>
+      </div>
 
       {deleteError && <p role="alert">{deleteError}</p>}
 
-      {goals.map((goal) => (
+      {visibleGoals.map((goal) => (
         <article className="goal-card" key={goal.id}>
           <span className="category">{goal.category}</span>
           <h2>{goal.name}</h2>
