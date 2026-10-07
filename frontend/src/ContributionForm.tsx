@@ -1,5 +1,6 @@
 import { useId, useRef, useState, type SubmitEvent } from "react";
 import type { Contribution, Goal } from "./types";
+import { API_BASE_URL } from "./config";
 
 type ContributionFormProps = {
   goal: Goal;
@@ -50,7 +51,7 @@ export default function ContributionForm({
 
     try {
         const baseUrl =
-          `http://localhost:8000/goals/${goal.id}/contributions`;
+          `${API_BASE_URL}/goals/${goal.id}/contributions`;
 
         const url = contribution
           ? `${baseUrl}/${contribution.id}`

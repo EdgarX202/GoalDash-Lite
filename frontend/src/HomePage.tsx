@@ -1,6 +1,7 @@
 import CategoryOverview from "./CategoryOverview";
 import { useEffect, useState } from "react";
 import type { Goal } from "./types";
+import { API_BASE_URL } from "./config";
 
 type HomePageProps = {
   onViewGoals: () => void;
@@ -21,7 +22,7 @@ export default function HomePage({ onViewGoals }: HomePageProps) {
 
     async function loadGoals() {
       try {
-        const response = await fetch("http://localhost:8000/goals", {
+        const response = await fetch(`${API_BASE_URL}/goals`, {
           signal: controller.signal,
         });
 

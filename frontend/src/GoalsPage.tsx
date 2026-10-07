@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type SubmitEvent } from "react";
 import type { Contribution, Goal } from "./types";
 import ContributionForm from "./ContributionForm";
+import { API_BASE_URL } from "./config";
 
 const currency = new Intl.NumberFormat("en-GB", {
   style: "currency",
@@ -52,8 +53,8 @@ function GoalForm({ goal, onSaved }: GoalFormProps) {
 
     try {
         const url = goal
-          ? `http://localhost:8000/goals/${goal.id}`
-          : "http://localhost:8000/goals";
+          ? `${API_BASE_URL}/goals/${goal.id}`
+          : `${API_BASE_URL}/goals`;
 
         const response = await fetch(url, {
           method: isEditing ? "PUT" : "POST",
@@ -208,7 +209,7 @@ function GoalsPage() {
 
     async function loadGoals() {
       try {
-        const response = await fetch("http://localhost:8000/goals", {
+        const response = await fetch(`${API_BASE_URL}/goals`, {
           signal: controller.signal,
         });
 
@@ -259,7 +260,7 @@ function GoalsPage() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/goals/${goal.id}/contributions/${contribution.id}`,
+        `${API_BASE_URL}/goals/${goal.id}/contributions/${contribution.id}`,
         { method: "DELETE" },
       );
 
@@ -292,7 +293,7 @@ function GoalsPage() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/goals/${goal.id}`,
+        `${API_BASE_URL}/goals/${goal.id}`,
         { method: "DELETE" },
       );
 
