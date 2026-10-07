@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type SubmitEvent } from "react";
-import type { Goal } from "./types";
+import type { Contribution, Goal } from "./types";
 import ContributionForm from "./ContributionForm";
 
 const currency = new Intl.NumberFormat("en-GB", {
@@ -199,6 +199,9 @@ function GoalsPage() {
   const [goalFilter, setGoalFilter] = useState<"active" | "completed">(
   "active",);
   const [sortBy, setSortBy] = useState("newest");
+  const [deletingContributionId, setDeletingContributionId] =
+  useState<number | null>(null);
+  const [contributionError, setContributionError] = useState("");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -232,6 +235,52 @@ function GoalsPage() {
 
     return () => controller.abort();
   }, []);
+
+  function updateGoalInList(updatedGoal: Goal) {
+  setGoals((currentGoals) =>
+    currentGoals.map((item) =>
+      item.id === updatedGoal.id ? updatedGoal : item,
+    ),
+  );
+}
+
+  async function deleteContribution(
+    goal: Goal,
+    contribution: Contribution,
+  ) {
+    const amount = currency.format(contribution.amount_pence / 100);
+
+    if (!window.confirm(`Delete this ${amount} contribution from "${goal.name}"?`)) {
+      return;
+    }
+
+    setDeletingContributionId(contribution.id);
+    setContributionError("");
+
+    try {
+      const response = await fetch(
+        `http://localhost:8000/goals/${goal.id}/contributions/${contribution.id}`,
+        { method: "DELETE" },
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Could not delete the contribution (${response.status}).`,
+        );
+      }
+
+      const updatedGoal: Goal = await response.json();
+      updateGoalInList(updatedGoal);
+    } catch (error) {
+      setContributionError(
+        error instanceof Error
+          ? error.message
+          : "Could not delete the contribution.",
+      );
+    } finally {
+      setDeletingContributionId(null);
+    }
+  }
 
   async function deleteGoal(goal: Goal) {
     const confirmed = window.confirm(`Delete "${goal.name}"?`);
@@ -363,6 +412,7 @@ function GoalsPage() {
       </div>
 
       {deleteError && <p role="alert">{deleteError}</p>}
+      {contributionError && <p role="alert">{contributionError}</p>}
 
       {visibleGoals.map((goal) => (
         <article className="goal-card" key={goal.id}>
@@ -428,6 +478,22 @@ function GoalsPage() {
                       <strong>
                         {currency.format(contribution.amount_pence / 100)}
                       </strong>
+                      <div className="history-actions">
+                        <ContributionForm
+                          goal={goal}
+                          contribution={contribution}
+                          onSaved={updateGoalInList}
+                        />
+
+                        <button
+                          className="history-delete-button"
+                          type="button"
+                          disabled={deletingContributionId !== null}
+                          onClick={() => deleteContribution(goal, contribution)}
+                        >
+                          {deletingContributionId === contribution.id ? "Deleting…" : "Delete"}
+                        </button>
+                      </div>
                     </li>
                   ))}
               </ul>

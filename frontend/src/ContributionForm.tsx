@@ -1,19 +1,22 @@
 import { useId, useRef, useState, type SubmitEvent } from "react";
-import type { Goal } from "./types";
+import type { Contribution, Goal } from "./types";
 
 type ContributionFormProps = {
   goal: Goal;
+  contribution?: Contribution;
   onSaved: (goal: Goal) => void;
 };
 
 export default function ContributionForm({
   goal,
   onSaved,
+  contribution,
 }: ContributionFormProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const formId = useId();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const isEditing = contribution !== undefined;
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -46,10 +49,15 @@ export default function ContributionForm({
     setError("");
 
     try {
-      const response = await fetch(
-        `http://localhost:8000/goals/${goal.id}/contributions`,
-        {
-          method: "POST",
+        const baseUrl =
+          `http://localhost:8000/goals/${goal.id}/contributions`;
+
+        const url = contribution
+          ? `${baseUrl}/${contribution.id}`
+          : baseUrl;
+
+        const response = await fetch(url, {
+          method: isEditing ? "PUT" : "POST",
           headers: {
             "Content-Type": "application/json",
           },
@@ -57,8 +65,7 @@ export default function ContributionForm({
             amount_pence: amountPence,
             contributed_on: contributedOn,
           }),
-        },
-      );
+        });
 
       if (!response.ok) {
         throw new Error(
@@ -80,14 +87,17 @@ export default function ContributionForm({
     }
   }
 
-  return (
+    return (
     <>
       <button
-        className="new-goal-button"
+        className={isEditing ? "history-edit-button" : "new-goal-button"}
         type="button"
-        onClick={() => dialogRef.current?.showModal()}
+        onClick={() => {
+          dialogRef.current?.querySelector("form")?.reset();
+          dialogRef.current?.showModal();
+        }}
       >
-        Add contribution
+        {isEditing ? "Edit" : "Add contribution"}
       </button>
 
       <dialog
@@ -103,7 +113,10 @@ export default function ContributionForm({
         }}
       >
         <form className="goal-form" onSubmit={handleSubmit}>
-          <h2 id={`${formId}-title`}>Add contribution</h2>
+          <h2 id={`${formId}-title`}>
+            {isEditing ? "Edit contribution" : "Add contribution"}
+          </h2>
+
           <p>{goal.name}</p>
 
           <fieldset disabled={saving}>
@@ -114,6 +127,11 @@ export default function ContributionForm({
               type="text"
               inputMode="decimal"
               placeholder="25.00"
+              defaultValue={
+                contribution
+                  ? (contribution.amount_pence / 100).toFixed(2)
+                  : ""
+              }
               required
             />
 
@@ -122,12 +140,17 @@ export default function ContributionForm({
               id={`${formId}-date`}
               name="contributed_on"
               type="date"
+              defaultValue={contribution?.contributed_on ?? ""}
               required
             />
 
             <div className="form-actions">
               <button type="submit">
-                {saving ? "Saving…" : "Add contribution"}
+                {saving
+                  ? "Saving…"
+                  : isEditing
+                    ? "Save changes"
+                    : "Add contribution"}
               </button>
 
               <button

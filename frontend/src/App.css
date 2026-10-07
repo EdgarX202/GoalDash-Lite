@@ -468,3 +468,34 @@ progress {
   margin: 0;
   font-weight: 700;
 }
+
+.contribution-history li {
+  align-items: center;
+}
+
+.history-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.history-actions > button {
+  padding: 6px 10px;
+  border: 1px solid #b8c7b6;
+  border-radius: 6px;
+  background: white;
+  color: #36543c;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.history-actions > .history-delete-button {
+  border-color: #b64a4a;
+  color: #922d2d;
+}
+
+.history-actions > button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
