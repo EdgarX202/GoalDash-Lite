@@ -65,3 +65,44 @@ def add_contribution(
         raise HTTPException(
             status_code=404, detail="Goal not found"
         ) from None
+
+@router.put(
+    "/{goal_id}/contributions/{contribution_id}",
+    response_model=Goal,
+)
+def update_contribution(
+    goal_id: int,
+    contribution_id: int,
+    contribution_data: ContributionCreate,
+):
+    try:
+        return repository.replace_contribution(
+            goal_id,
+            contribution_id,
+            contribution_data,
+        )
+    except repository.ContributionNotFoundError:
+        raise HTTPException(
+            status_code=404,
+            detail="Contribution not found for this goal",
+        ) from None
+
+
+@router.delete(
+    "/{goal_id}/contributions/{contribution_id}",
+    response_model=Goal,
+)
+def delete_contribution(
+    goal_id: int,
+    contribution_id: int,
+):
+    try:
+        return repository.remove_contribution(
+            goal_id,
+            contribution_id,
+        )
+    except repository.ContributionNotFoundError:
+        raise HTTPException(
+            status_code=404,
+            detail="Contribution not found for this goal",
+        ) from None

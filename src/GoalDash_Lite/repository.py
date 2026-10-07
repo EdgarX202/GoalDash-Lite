@@ -5,6 +5,8 @@ from GoalDash_Lite.schemas import Contribution, ContributionCreate, Goal, GoalCr
 class GoalNotFoundError(Exception):
     pass
 
+class ContributionNotFoundError(Exception):
+    pass
 
 def _read_goal(connection, goal_id: int) -> Goal:
     row = connection.execute(
@@ -130,5 +132,49 @@ def insert_contribution(
 
         if cursor.rowcount == 0:
             raise GoalNotFoundError()
+
+        return _read_goal(connection, goal_id)
+
+def replace_contribution(
+    goal_id: int,
+    contribution_id: int,
+    data: ContributionCreate,
+) -> Goal:
+    with get_connection() as connection:
+        cursor = connection.execute(
+            """
+            UPDATE contributions
+            SET amount_pence = ?, contributed_on = ?
+            WHERE id = ? AND goal_id = ?
+            """,
+            (
+                data.amount_pence,
+                data.contributed_on.isoformat(),
+                contribution_id,
+                goal_id,
+            ),
+        )
+
+        if cursor.rowcount == 0:
+            raise ContributionNotFoundError()
+
+        return _read_goal(connection, goal_id)
+
+
+def remove_contribution(
+    goal_id: int,
+    contribution_id: int,
+) -> Goal:
+    with get_connection() as connection:
+        cursor = connection.execute(
+            """
+            DELETE FROM contributions
+            WHERE id = ? AND goal_id = ?
+            """,
+            (contribution_id, goal_id),
+        )
+
+        if cursor.rowcount == 0:
+            raise ContributionNotFoundError()
 
         return _read_goal(connection, goal_id)
