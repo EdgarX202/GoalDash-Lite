@@ -251,3 +251,52 @@ progress {
   color: #243127;
   font: inherit;
 }
+
+.main-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 40px;
+  background: white;
+  border-bottom: 1px solid #dce4da;
+}
+
+.navigation-brand {
+  color: #36543c;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.navigation-links {
+  display: flex;
+  gap: 8px;
+}
+
+.navigation-links button {
+  padding: 10px 20px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #36543c;
+  font: inherit;
+  cursor: pointer;
+}
+
+.navigation-links button[aria-pressed="true"] {
+  background: #eaf2e6;
+  font-weight: 600;
+}
+
+.home-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.home-panel {
+  margin-top: 28px;
+  padding: 24px;
+  background: white;
+  border: 1px solid #dce4da;
+  border-radius: 14px;
+}
