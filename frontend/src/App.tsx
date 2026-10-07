@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { Link, NavLink, Route, Routes, useNavigate } from "react-router";
 import GoalsPage from "./GoalsPage";
 import HomePage from "./HomePage";
 import "./App.css";
 
 export default function App() {
-  const [page, setPage] = useState<"home" | "goals">("home");
+  const navigate = useNavigate();
 
   return (
     <>
@@ -12,29 +12,35 @@ export default function App() {
         <span className="navigation-brand">GoalDash Lite</span>
 
         <div className="navigation-links">
-          <button
-            type="button"
-            aria-pressed={page === "home"}
-            onClick={() => setPage("home")}
-          >
+          <NavLink to="/" end>
             Home
-          </button>
+          </NavLink>
 
-          <button
-            type="button"
-            aria-pressed={page === "goals"}
-            onClick={() => setPage("goals")}
-          >
+          <NavLink to="/goals">
             Goals
-          </button>
+          </NavLink>
         </div>
       </nav>
 
-      {page === "home" ? (
-        <HomePage onViewGoals={() => setPage("goals")} />
-      ) : (
-        <GoalsPage />
-      )}
+      <Routes>
+        <Route
+          path="/"
+          element={<HomePage onViewGoals={() => navigate("/goals")} />}
+        />
+
+        <Route path="/goals" element={<GoalsPage />} />
+
+        <Route
+          path="*"
+          element={
+            <main className="home-page">
+              <h1>Page not found</h1>
+              <p>This address doesn’t match a page in GoalDash Lite.</p>
+              <Link to="/">Return home</Link>
+            </main>
+          }
+        />
+      </Routes>
     </>
   );
 }

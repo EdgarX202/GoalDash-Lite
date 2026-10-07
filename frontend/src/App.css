@@ -272,17 +272,16 @@ progress {
   gap: 8px;
 }
 
-.navigation-links button {
+.navigation-links a {
+  display: inline-block;
   padding: 10px 20px;
-  border: 0;
   border-radius: 8px;
-  background: transparent;
   color: #36543c;
   font: inherit;
-  cursor: pointer;
+  text-decoration: none;
 }
 
-.navigation-links button[aria-pressed="true"] {
+.navigation-links a.active {
   background: #eaf2e6;
   font-weight: 600;
 }
