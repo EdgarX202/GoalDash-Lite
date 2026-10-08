@@ -57,6 +57,7 @@ function GoalForm({ goal, onSaved }: GoalFormProps) {
           : `${API_BASE_URL}/goals`;
 
         const response = await fetch(url, {
+          credentials: "include",
           method: isEditing ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
@@ -210,6 +211,7 @@ function GoalsPage() {
     async function loadGoals() {
       try {
         const response = await fetch(`${API_BASE_URL}/goals`, {
+          credentials: "include",
           signal: controller.signal,
         });
 
@@ -261,7 +263,7 @@ function GoalsPage() {
     try {
       const response = await fetch(
         `${API_BASE_URL}/goals/${goal.id}/contributions/${contribution.id}`,
-        { method: "DELETE" },
+        { credentials: "include", method: "DELETE" },
       );
 
       if (!response.ok) {
@@ -294,7 +296,7 @@ function GoalsPage() {
     try {
       const response = await fetch(
         `${API_BASE_URL}/goals/${goal.id}`,
-        { method: "DELETE" },
+        { credentials: "include", method: "DELETE" },
       );
 
       if (!response.ok) {

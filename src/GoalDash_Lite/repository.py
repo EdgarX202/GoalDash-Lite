@@ -40,10 +40,15 @@ def _read_goal(connection, goal_id: int) -> Goal:
     )
 
 
-def list_goals() -> list[Goal]:
+def list_goals(user_id: int) -> list[Goal]:
     with get_connection() as connection:
         rows = connection.execute(
-            "SELECT id FROM goals ORDER BY id DESC"
+            """
+            SELECT id FROM goals
+            WHERE user_id = ?
+            ORDER BY id DESC
+            """,
+            (user_id,),
         ).fetchall()
 
         return [_read_goal(connection, row["id"]) for row in rows]
@@ -54,15 +59,16 @@ def find_goal(goal_id: int) -> Goal:
         return _read_goal(connection, goal_id)
 
 
-def insert_goal(data: GoalCreate) -> Goal:
+def insert_goal(data: GoalCreate, user_id: int) -> Goal:
     with get_connection() as connection:
         cursor = connection.execute(
             """
             INSERT INTO goals
-                (name, category, target_pence, deadline, priority)
-            VALUES (?, ?, ?, ?, ?)
+                (user_id, name, category, target_pence, deadline, priority)
+            VALUES (?, ?, ?, ?, ?, ?)
             """,
             (
+                user_id,
                 data.name,
                 data.category,
                 data.target_pence,

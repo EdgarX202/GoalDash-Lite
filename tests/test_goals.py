@@ -13,8 +13,31 @@ def temporary_database(tmp_path, monkeypatch):
         tmp_path / "test.db",
     )
 
+def sign_in_test_user(client, register=False):
+    client.headers.update({"Origin": "http://localhost:8000"})
+
+    credentials = {
+        "email": "goals-test@example.com",
+        "password": "a sample passphrase for testing",
+    }
+
+    if register:
+        response = client.post(
+            "/auth/register",
+            json={
+                **credentials,
+                "display_name": "Goals Test User",
+            },
+        )
+        assert response.status_code == 201
+
+    response = client.post("/auth/login", json=credentials)
+    assert response.status_code == 200
+
 
 def create_test_goal(client):
+    sign_in_test_user(client, register=True)
+
     response = client.post(
         "/goals",
         json={
@@ -99,6 +122,7 @@ def test_goal_and_contribution_survive_app_restart():
 
     # Start a new app lifespan using the same temporary database.
     with TestClient(app) as restarted_client:
+        sign_in_test_user(restarted_client)
         response = restarted_client.get(goal_url)
 
         assert response.status_code == 200
@@ -107,6 +131,7 @@ def test_goal_and_contribution_survive_app_restart():
 
 def test_zero_target_is_rejected():
     with TestClient(app) as client:
+        sign_in_test_user(client, register=True)
         response = client.post(
             "/goals",
             json={

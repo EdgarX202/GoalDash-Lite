@@ -47,9 +47,23 @@ def initialise_database():
             )
         """)
 
+        goal_columns = {
+            row["name"]
+            for row in connection.execute("PRAGMA table_info(goals)")
+        }
+
+        if goal_columns and "user_id" not in goal_columns:
+            connection.execute("DELETE FROM contributions")
+            connection.execute("DELETE FROM goals")
+            connection.execute("""
+                ALTER TABLE goals
+                ADD COLUMN user_id INTEGER NOT NULL REFERENCES users(id)
+            """)
+
         connection.execute("""
             CREATE TABLE IF NOT EXISTS goals (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL REFERENCES users(id),
                 name TEXT NOT NULL,
                 category TEXT NOT NULL,
                 target_pence INTEGER NOT NULL CHECK (target_pence > 0),

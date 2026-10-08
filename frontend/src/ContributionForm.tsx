@@ -58,6 +58,7 @@ export default function ContributionForm({
           : baseUrl;
 
         const response = await fetch(url, {
+          credentials: "include",
           method: isEditing ? "PUT" : "POST",
           headers: {
             "Content-Type": "application/json",

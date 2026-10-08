@@ -23,6 +23,7 @@ export default function HomePage({ onViewGoals }: HomePageProps) {
     async function loadGoals() {
       try {
         const response = await fetch(`${API_BASE_URL}/goals`, {
+          credentials: "include",
           signal: controller.signal,
         });
 

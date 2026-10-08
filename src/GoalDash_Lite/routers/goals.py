@@ -1,19 +1,39 @@
-from fastapi import APIRouter, HTTPException, Response
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException, Response
 
 from GoalDash_Lite import repository
+from GoalDash_Lite.auth_dependencies import (
+    get_current_user,
+    require_trusted_origin,
+)
+from GoalDash_Lite.auth_schemas import UserPublic
+from GoalDash_Lite.goal_access import require_goal_access
 from GoalDash_Lite.schemas import ContributionCreate, Goal, GoalCreate
 
-router = APIRouter(prefix="/goals", tags=["Goals"])
+router = APIRouter(
+    prefix="/goals",
+    tags=["Goals"],
+    dependencies=[
+        Depends(require_goal_access),
+        Depends(require_trusted_origin),
+    ],
+)
 
 
 @router.get("", response_model=list[Goal])
-def get_goals():
-    return repository.list_goals()
+def get_goals(
+    user: Annotated[UserPublic, Depends(get_current_user)],
+):
+    return repository.list_goals(user.id)
 
 
 @router.post("", response_model=Goal, status_code=201)
-def create_goal(goal_data: GoalCreate):
-    return repository.insert_goal(goal_data)
+def create_goal(
+    goal_data: GoalCreate,
+    user: Annotated[UserPublic, Depends(get_current_user)],
+):
+    return repository.insert_goal(goal_data, user.id)
 
 
 @router.get("/{goal_id}", response_model=Goal)
