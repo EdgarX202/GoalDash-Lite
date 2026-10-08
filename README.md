@@ -31,6 +31,6 @@ Progression System
 ## 💾 Tech Stack
 * **Frontend**: React
 * **Backend**: Python, FastAPI
-* **Database**: PostgreSQL
+* **Database**: SQLite
 
 © 2026 Edgar Park. All Rights Reserved.
