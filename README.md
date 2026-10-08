@@ -16,7 +16,7 @@ The project explores how goal tracking, progression and rewards can be used to e
 Core Goals System 
 - [ ] User Account Management
 - [X] Goals Creation and Management
-- [ ] Goals Dashboard
+- [X] Goals Dashboard
 
 ### Phase Two
 Progression System
