@@ -378,43 +378,46 @@ function GoalsPage() {
         </p>
       )}
 
-      <div className="goal-filters" role="group" aria-label="Filter goals">
-        <button
-          type="button"
-          aria-pressed={goalFilter === "active"}
-          onClick={() => setGoalFilter("active")}
-        >
-          Active ({activeGoals.length})
-        </button>
+      <div className="goals-toolbar">
+        <div className="goal-filters" role="group" aria-label="Filter goals">
+          <button
+            type="button"
+            aria-pressed={goalFilter === "active"}
+            onClick={() => setGoalFilter("active")}
+          >
+            Active ({activeGoals.length})
+          </button>
 
-        <button
-          type="button"
-          aria-pressed={goalFilter === "completed"}
-          onClick={() => setGoalFilter("completed")}
-        >
-          Completed ({completedGoals.length})
-        </button>
-      </div>
+          <button
+            type="button"
+            aria-pressed={goalFilter === "completed"}
+            onClick={() => setGoalFilter("completed")}
+          >
+            Completed ({completedGoals.length})
+          </button>
+        </div>
 
-      <div className="goal-sort">
-        <label htmlFor="goal-sort">Sort by</label>
+        <div className="goal-sort">
+          <label htmlFor="goal-sort">Sort by</label>
 
-        <select
-          id="goal-sort"
-          value={sortBy}
-          onChange={(event) => setSortBy(event.target.value)}
-        >
-          <option value="newest">Newest first</option>
-          <option value="oldest">Oldest first</option>
-          <option value="priority">Priority: high first</option>
-          <option value="target">Target: highest first</option>
-          <option value="category">Category: A–Z</option>
-        </select>
+          <select
+            id="goal-sort"
+            value={sortBy}
+            onChange={(event) => setSortBy(event.target.value)}
+          >
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="priority">Priority: high first</option>
+            <option value="target">Target: highest first</option>
+            <option value="category">Category: A–Z</option>
+          </select>
+        </div>
       </div>
 
       {deleteError && <p role="alert">{deleteError}</p>}
       {contributionError && <p role="alert">{contributionError}</p>}
 
+      <div className="goals-grid">
       {visibleGoals.map((goal) => (
         <article className="goal-card" key={goal.id}>
           <span className="category">{goal.category}</span>
@@ -534,6 +537,7 @@ function GoalsPage() {
           
         </article>
       ))}
+      </div>
     </main>
   );
 }
