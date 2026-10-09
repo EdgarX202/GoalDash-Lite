@@ -593,3 +593,29 @@ progress {
 .auth-page small {
   color: #48634d;
 }
+
+.account-panel {
+  max-width: 560px;
+}
+
+.account-panel h2 {
+  margin-top: 0;
+}
+
+.account-details {
+  margin: 24px 0;
+}
+
+.account-details dt {
+  color: #48634d;
+  font-size: 0.9rem;
+}
+
+.account-details dd {
+  margin: 6px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.account-success {
+  color: #36543c;
+}

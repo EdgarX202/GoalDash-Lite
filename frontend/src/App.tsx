@@ -13,6 +13,7 @@ import GoalsPage from "./GoalsPage";
 import HomePage from "./HomePage";
 import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
+import AccountPage from "./AccountPage";
 import "./App.css";
 
 export default function App() {
@@ -132,6 +133,7 @@ export default function App() {
         <div className="navigation-links">
           <NavLink to="/" end>Home</NavLink>
           <NavLink to="/goals">Goals</NavLink>
+          <NavLink to="/account">Account</NavLink>
         </div>
 
         <div className="account-navigation">
@@ -156,6 +158,17 @@ export default function App() {
           element={<HomePage onViewGoals={() => navigate("/goals")} />}
         />
         <Route path="/goals" element={<GoalsPage />} />
+        <Route
+          path="/account"
+          element={
+            <AccountPage
+              key={user.id}
+              user={user}
+              onUpdated={setUser}
+            />
+          }
+        />
+        <Route path="/login" element={<Navigate to="/" replace />} />
         <Route path="/register" element={<Navigate to="/" replace />} />
         <Route
           path="*"
