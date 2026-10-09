@@ -539,3 +539,47 @@ progress {
 .goals-grid .history-actions {
   margin-left: auto;
 }
+
+.auth-page {
+  max-width: 440px;
+  margin: 64px auto;
+  padding: 32px;
+  background: white;
+  border: 1px solid #dce4da;
+  border-radius: 16px;
+}
+
+.auth-page h1 {
+  margin-top: 12px;
+}
+
+.auth-page .goal-form {
+  margin-top: 24px;
+}
+
+.account-navigation {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.account-navigation button {
+  padding: 8px 14px;
+  border: 1px solid #b8c7b6;
+  border-radius: 8px;
+  background: white;
+  color: #36543c;
+  font: inherit;
+  cursor: pointer;
+}
+
+.account-navigation button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.account-message {
+  max-width: 1100px;
+  margin: 16px auto;
+  padding: 0 40px;
+}

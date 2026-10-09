@@ -14,3 +14,9 @@ export type Goal = {
   priority: "High" | "Moderate" | "Low";
   contributions: Contribution[];
 };
+
+export type User = {
+  id: number;
+  display_name: string;
+  email: string;
+};
