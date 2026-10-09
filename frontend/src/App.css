@@ -583,3 +583,13 @@ progress {
   margin: 16px auto;
   padding: 0 40px;
 }
+
+.auth-page a {
+  color: #36543c;
+  font-weight: 600;
+  text-underline-offset: 3px;
+}
+
+.auth-page small {
+  color: #48634d;
+}

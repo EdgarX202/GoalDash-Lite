@@ -1,6 +1,7 @@
 import { useState, type SubmitEvent } from "react";
 import { API_BASE_URL } from "./config";
 import type { User } from "./types";
+import { Link } from "react-router";
 
 type LoginPageProps = {
   onSignedIn: (user: User) => void;
@@ -84,6 +85,9 @@ export default function LoginPage({ onSignedIn }: LoginPageProps) {
 
         {error && <p role="alert">{error}</p>}
       </form>
+    <p>
+        New to GoalDash Lite? <Link to="/register">Create an account</Link>
+    </p>
     </main>
   );
 }

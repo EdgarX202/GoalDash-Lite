@@ -12,6 +12,7 @@ import type { User } from "./types";
 import GoalsPage from "./GoalsPage";
 import HomePage from "./HomePage";
 import LoginPage from "./LoginPage";
+import RegisterPage from "./RegisterPage";
 import "./App.css";
 
 export default function App() {
@@ -117,6 +118,7 @@ export default function App() {
             />
           }
         />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
@@ -154,7 +156,7 @@ export default function App() {
           element={<HomePage onViewGoals={() => navigate("/goals")} />}
         />
         <Route path="/goals" element={<GoalsPage />} />
-        <Route path="/login" element={<Navigate to="/" replace />} />
+        <Route path="/register" element={<Navigate to="/" replace />} />
         <Route
           path="*"
           element={

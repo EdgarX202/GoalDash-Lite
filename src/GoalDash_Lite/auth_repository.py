@@ -1,6 +1,6 @@
 import sqlite3
 
-from GoalDash_Lite.auth_schemas import UserPublic, UserRegister
+from GoalDash_Lite.auth_schemas import UserPublic, UserRegister, UserUpdate
 from GoalDash_Lite.database import get_connection
 from GoalDash_Lite.security import hash_password, verify_password
 
@@ -51,6 +51,30 @@ def authenticate_user(email: str, password: str) -> UserPublic | None:
     password_matches = verify_password(password, stored_hash)
 
     if row is None or not password_matches:
+        return None
+
+    return UserPublic(
+        id=row["id"],
+        display_name=row["display_name"],
+        email=row["email"],
+    )
+
+def update_user_profile(
+    user_id: int,
+    data: UserUpdate,
+) -> UserPublic | None:
+    with get_connection() as connection:
+        connection.execute(
+            "UPDATE users SET display_name = ? WHERE id = ?",
+            (data.display_name, user_id),
+        )
+
+        row = connection.execute(
+            "SELECT id, display_name, email FROM users WHERE id = ?",
+            (user_id,),
+        ).fetchone()
+
+    if row is None:
         return None
 
     return UserPublic(

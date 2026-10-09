@@ -26,3 +26,16 @@ class UserPublic(BaseModel):
     id: int
     display_name: str
     email: EmailStr
+
+class UserUpdate(BaseModel):
+    display_name: str = Field(min_length=1, max_length=50)
+
+    @field_validator("display_name")
+    @classmethod
+    def clean_display_name(cls, value: str) -> str:
+        value = value.strip()
+
+        if not value:
+            raise ValueError("Display name cannot be blank")
+
+        return value

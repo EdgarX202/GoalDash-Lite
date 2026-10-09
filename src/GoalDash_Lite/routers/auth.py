@@ -9,7 +9,12 @@ from GoalDash_Lite.auth_dependencies import (
     get_current_user,
     require_trusted_origin,
 )
-from GoalDash_Lite.auth_schemas import UserLogin, UserPublic, UserRegister
+from GoalDash_Lite.auth_schemas import (
+    UserLogin,
+    UserPublic,
+    UserRegister,
+    UserUpdate,
+)
 from GoalDash_Lite.sessions import (
     SESSION_DURATION_SECONDS,
     create_session,
@@ -78,6 +83,23 @@ def read_current_user(
     response.headers["Cache-Control"] = "no-store"
     return user
 
+@router.patch("/me", response_model=UserPublic)
+def update_current_user(
+    data: UserUpdate,
+    response: Response,
+    user: Annotated[UserPublic, Depends(get_current_user)],
+):
+    updated_user = auth_repository.update_user_profile(user.id, data)
+
+    if updated_user is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Please sign in",
+        )
+
+    response.headers["Cache-Control"] = "no-store"
+
+    return updated_user
 
 @router.post("/logout", status_code=204)
 def logout_user(request: Request):
