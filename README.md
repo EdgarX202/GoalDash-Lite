@@ -14,7 +14,7 @@ The project explores how goal tracking, progression and rewards can be used to e
 ## 🛠️ Roadmap
 ### Phase One
 Core Goals System 
-- [ ] User Account Management
+- [X] User Account Management
 - [X] Goals Creation and Management
 - [X] Goals Dashboard
 
@@ -31,6 +31,6 @@ Progression System
 ## 💾 Tech Stack
 * **Frontend**: React
 * **Backend**: Python, FastAPI
-* **Database**: PostgreSQL
+* **Database**: SQLite
 
 © 2026 Edgar Park. All Rights Reserved.
