@@ -10,6 +10,7 @@ from GoalDash_Lite.auth_dependencies import (
     require_trusted_origin,
 )
 from GoalDash_Lite.auth_schemas import (
+    PasswordChange,
     UserLogin,
     UserPublic,
     UserRegister,
@@ -106,6 +107,42 @@ def logout_user(request: Request):
     delete_session(request.cookies.get(SESSION_COOKIE_NAME))
 
     response = Response(status_code=204)
+    response.delete_cookie(
+        key=SESSION_COOKIE_NAME,
+        path="/",
+        secure=COOKIE_SECURE,
+        httponly=True,
+        samesite="lax",
+    )
+    response.headers["Cache-Control"] = "no-store"
+
+    return response
+
+@router.post("/change-password", status_code=204)
+def change_password(
+    data: PasswordChange,
+    user: Annotated[UserPublic, Depends(get_current_user)],
+):
+    if data.current_password == data.new_password:
+        raise HTTPException(
+            status_code=400,
+            detail="Choose a different new password",
+        )
+
+    changed = auth_repository.change_user_password(
+        user.id,
+        data.current_password,
+        data.new_password,
+    )
+
+    if not changed:
+        raise HTTPException(
+            status_code=400,
+            detail="Password was not changed. Check your current password.",
+        )
+
+    response = Response(status_code=204)
+
     response.delete_cookie(
         key=SESSION_COOKIE_NAME,
         path="/",

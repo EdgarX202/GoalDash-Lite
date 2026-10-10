@@ -82,3 +82,43 @@ def update_user_profile(
         display_name=row["display_name"],
         email=row["email"],
     )
+
+def change_user_password(
+    user_id: int,
+    current_password: str,
+    new_password: str,
+) -> bool:
+    with get_connection() as connection:
+        row = connection.execute(
+            "SELECT password_hash FROM users WHERE id = ?",
+            (user_id,),
+        ).fetchone()
+
+        if row is None:
+            return False
+
+        old_hash = row["password_hash"]
+
+        if not verify_password(current_password, old_hash):
+            return False
+
+        new_hash = hash_password(new_password)
+
+        cursor = connection.execute(
+            """
+            UPDATE users
+            SET password_hash = ?
+            WHERE id = ? AND password_hash = ?
+            """,
+            (new_hash, user_id, old_hash),
+        )
+
+        if cursor.rowcount != 1:
+            return False
+
+        connection.execute(
+            "DELETE FROM sessions WHERE user_id = ?",
+            (user_id,),
+        )
+
+    return True

@@ -39,3 +39,7 @@ class UserUpdate(BaseModel):
             raise ValueError("Display name cannot be blank")
 
         return value
+
+class PasswordChange(BaseModel):
+    current_password: str = Field(min_length=1, max_length=128)
+    new_password: str = Field(min_length=15, max_length=128)
