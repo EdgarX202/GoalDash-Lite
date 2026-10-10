@@ -23,6 +23,7 @@ export default function App() {
   const [sessionError, setSessionError] = useState("");
   const [signingOut, setSigningOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
+  const [loginMessage, setLoginMessage] = useState("");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -112,7 +113,9 @@ export default function App() {
           path="/login"
           element={
             <LoginPage
+              message={loginMessage}
               onSignedIn={(signedInUser) => {
+                setLoginMessage("");
                 setUser(signedInUser);
                 navigate("/", { replace: true });
               }}
@@ -165,6 +168,14 @@ export default function App() {
               key={user.id}
               user={user}
               onUpdated={setUser}
+              onPasswordChanged={() => {
+                setUser(null);
+                setLogoutError("");
+                setLoginMessage(
+                  "Your password has been changed. Sign in with your new password.",
+                );
+                navigate("/login", { replace: true });
+              }}
             />
           }
         />

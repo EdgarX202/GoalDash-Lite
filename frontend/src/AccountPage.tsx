@@ -1,15 +1,18 @@
 import { useState, type SubmitEvent } from "react";
 import { API_BASE_URL } from "./config";
 import type { User } from "./types";
+import PasswordChangeForm from "./PasswordChangeForm";
 
 type AccountPageProps = {
   user: User;
   onUpdated: (user: User) => void;
+  onPasswordChanged: () => void;
 };
 
 export default function AccountPage({
   user,
   onUpdated,
+  onPasswordChanged,
 }: AccountPageProps) {
   const [displayName, setDisplayName] = useState(user.display_name);
   const [saving, setSaving] = useState(false);
@@ -117,6 +120,8 @@ export default function AccountPage({
           </p>
         </form>
       </section>
+
+      <PasswordChangeForm onPasswordChanged={onPasswordChanged} />
     </main>
   );
 }

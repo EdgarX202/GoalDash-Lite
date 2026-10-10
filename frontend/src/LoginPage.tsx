@@ -3,11 +3,15 @@ import { API_BASE_URL } from "./config";
 import type { User } from "./types";
 import { Link } from "react-router";
 
-type LoginPageProps = {
-  onSignedIn: (user: User) => void;
-};
+  type LoginPageProps = {
+    onSignedIn: (user: User) => void;
+    message?: string;
+  };
 
-export default function LoginPage({ onSignedIn }: LoginPageProps) {
+  export default function LoginPage({
+    onSignedIn,
+    message,
+  }: LoginPageProps) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -56,6 +60,7 @@ export default function LoginPage({ onSignedIn }: LoginPageProps) {
       <p className="app-name">GoalDash Lite</p>
       <h1>Welcome back</h1>
       <p>Sign in to see your goals and progress.</p>
+      {message && <p role="status">{message}</p>}
 
       <form className="goal-form" onSubmit={handleSubmit}>
         <fieldset disabled={saving}>
