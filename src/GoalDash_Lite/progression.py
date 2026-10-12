@@ -6,6 +6,13 @@ XP_PER_CONTRIBUTION_DATE = 10
 XP_PER_COMPLETED_GOAL = 50
 XP_PER_LEVEL = 100
 
+class Achievement(BaseModel):
+    id: str
+    name: str
+    description: str
+    progress: int
+    target: int
+    unlocked: bool
 
 class ProgressionSummary(BaseModel):
     total_xp: int
@@ -47,3 +54,41 @@ def calculate_progression(goals: list[Goal]) -> ProgressionSummary:
         contribution_dates=len(contribution_dates),
         completed_goals=completed_goals,
     )
+
+class Achievement(BaseModel):
+    id: str
+    name: str
+    description: str
+    progress: int
+    target: int
+    unlocked: bool
+
+def calculate_achievements(
+    summary: ProgressionSummary,
+) -> list[Achievement]:
+    return [
+        Achievement(
+            id="first-step",
+            name="First step",
+            description="Record your first contribution.",
+            progress=min(summary.contribution_dates, 1),
+            target=1,
+            unlocked=summary.contribution_dates >= 1,
+        ),
+        Achievement(
+            id="building-momentum",
+            name="Building momentum",
+            description="Record contributions on three different dates.",
+            progress=min(summary.contribution_dates, 3),
+            target=3,
+            unlocked=summary.contribution_dates >= 3,
+        ),
+        Achievement(
+            id="goal-achieved",
+            name="Goal achieved",
+            description="Complete your first goal.",
+            progress=min(summary.completed_goals, 1),
+            target=1,
+            unlocked=summary.completed_goals >= 1,
+        ),
+    ]
