@@ -2,6 +2,7 @@ import CategoryOverview from "./CategoryOverview";
 import { useEffect, useState } from "react";
 import type { Goal } from "./types";
 import { API_BASE_URL } from "./config";
+import ProgressionPanel from "./ProgressionPanel";
 
 type HomePageProps = {
   onViewGoals: () => void;
@@ -163,6 +164,8 @@ export default function HomePage({ onViewGoals }: HomePageProps) {
               ))
             )}
           </section>
+
+          <ProgressionPanel />
 
           <CategoryOverview goals={goals} />
         </>

@@ -619,3 +619,55 @@ progress {
 .account-success {
   color: #36543c;
 }
+
+.progression-panel {
+  background: #f0f5ec;
+}
+
+.progression-panel h2 {
+  margin-top: 0;
+}
+
+.progression-heading,
+.progression-labels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.progression-heading {
+  margin: 20px 0;
+  color: #48634d;
+  font-weight: 600;
+}
+
+.level-badge {
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #36543c;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.progression-labels {
+  margin-bottom: 8px;
+  color: #48634d;
+  font-size: 0.9rem;
+}
+
+.progression-panel progress {
+  display: block;
+  height: 18px;
+}
+
+.progression-next {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.progression-explanation {
+  color: #48634d;
+  line-height: 1.5;
+}

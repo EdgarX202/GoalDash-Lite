@@ -20,3 +20,13 @@ export type User = {
   display_name: string;
   email: string;
 };
+
+export type ProgressionSummary = {
+  total_xp: number;
+  level: number;
+  xp_into_level: number;
+  xp_per_level: number;
+  xp_to_next_level: number;
+  contribution_dates: number;
+  completed_goals: number;
+};
