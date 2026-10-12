@@ -20,11 +20,10 @@ Core Goals System
 
 ### Phase Two
 Progression System
-- [ ] XP System
-- [ ] XP Levels
-- [ ] Achievements
-- [ ] Milestones
-- [ ] Rewards
+- [X] XP System
+- [X] XP Levels
+- [X] Achievements
+- [X] Milestones
 
 ---
 
