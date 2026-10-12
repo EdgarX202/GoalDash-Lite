@@ -671,3 +671,65 @@ progress {
   color: #48634d;
   line-height: 1.5;
 }
+
+.achievements-panel .home-panel-heading > span {
+  color: #48634d;
+  font-size: 0.9rem;
+}
+
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.achievement-card {
+  padding: 20px;
+  border: 1px solid #dce4da;
+  border-radius: 12px;
+  background: #f7f8f5;
+}
+
+.achievement-card.is-unlocked {
+  border-color: #9bb590;
+  background: #edf5e7;
+}
+
+.achievement-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e6eae2;
+  color: #53634d;
+  font-size: 1.5rem;
+}
+
+.is-unlocked .achievement-icon {
+  background: #36543c;
+  color: #fff0a6;
+}
+
+.achievement-card h3 {
+  margin: 14px 0 8px;
+  font-size: 1rem;
+}
+
+.achievement-card p {
+  color: #48634d;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.achievement-card progress {
+  display: block;
+  height: 10px;
+  margin-top: 16px;
+}
+
+.achievement-card .achievement-status {
+  margin-bottom: 0;
+  font-weight: 600;
+}

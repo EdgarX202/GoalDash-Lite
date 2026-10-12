@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type SubmitEvent } from "react";
 import type { Contribution, Goal } from "./types";
 import ContributionForm from "./ContributionForm";
 import { API_BASE_URL } from "./config";
+import AchievementsPanel from "./AchievementsPanel";
 
 const currency = new Intl.NumberFormat("en-GB", {
   style: "currency",
@@ -360,11 +361,15 @@ function GoalsPage() {
       </header>
 
       {!loading && !error && (
-        <GoalForm
-          onSaved={(newGoal) => {
-            setGoals((currentGoals) => [...currentGoals, newGoal]);
-          }}
-        />
+        <>
+          <AchievementsPanel goals={goals} />
+
+          <GoalForm
+            onSaved={(newGoal) => {
+              setGoals((currentGoals) => [...currentGoals, newGoal]);
+            }}
+          />
+        </>
       )}
 
       {loading && <p role="status">Loading your goals…</p>}

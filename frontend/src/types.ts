@@ -30,3 +30,12 @@ export type ProgressionSummary = {
   contribution_dates: number;
   completed_goals: number;
 };
+
+export type Achievement = {
+  id: string;
+  name: string;
+  description: string;
+  progress: number;
+  target: number;
+  unlocked: boolean;
+};

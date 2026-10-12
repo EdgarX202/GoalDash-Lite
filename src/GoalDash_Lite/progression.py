@@ -6,14 +6,6 @@ XP_PER_CONTRIBUTION_DATE = 10
 XP_PER_COMPLETED_GOAL = 50
 XP_PER_LEVEL = 100
 
-class Achievement(BaseModel):
-    id: str
-    name: str
-    description: str
-    progress: int
-    target: int
-    unlocked: bool
-
 class ProgressionSummary(BaseModel):
     total_xp: int
     level: int
