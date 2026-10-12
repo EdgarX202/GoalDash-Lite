@@ -3,6 +3,7 @@ import type { Contribution, Goal } from "./types";
 import ContributionForm from "./ContributionForm";
 import { API_BASE_URL } from "./config";
 import AchievementsPanel from "./AchievementsPanel";
+import GoalMilestones from "./GoalMilestones";
 
 const currency = new Intl.NumberFormat("en-GB", {
   style: "currency",
@@ -461,6 +462,8 @@ function GoalsPage() {
             % complete
           </p>
 
+          <GoalMilestones goal={goal} />
+          
           <details className="contribution-history">
             <summary>
               Contribution history ({goal.contributions.length})
