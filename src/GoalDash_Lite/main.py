@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from GoalDash_Lite.database import initialise_database
-from GoalDash_Lite.routers import auth, goals
+from GoalDash_Lite.routers import auth, goals, progression
 
 
 @asynccontextmanager
@@ -25,6 +25,7 @@ app.add_middleware(
 
 app.include_router(goals.router)
 app.include_router(auth.router)
+app.include_router(progression.router)
 
 
 @app.get("/")
