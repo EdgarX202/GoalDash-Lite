@@ -369,5 +369,3 @@ Authentication uses hashed passwords and server-side sessions. Public deployment
 
 Copyright © 2026 Edgar Park. All rights reserved.
 
-This repository is not released under an open-source licence. The current [LICENSE.md](LICENSE.md) requires the copyright holder's express prior written permission to use, copy, modify, or distribute the project. These setup instructions do not grant additional rights.
-
